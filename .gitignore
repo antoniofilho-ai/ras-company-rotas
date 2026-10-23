@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+api/data/*.json
+api/data/*.tmp
+*.log
+.DS_Store
+# Backups com dados completos nunca sao enviados ao GitHub.
+backup-dados-publicacao-*.json
+public-data.old/
+public-data.old

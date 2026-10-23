@@ -1,0 +1,62 @@
+{
+  "unit": {
+    "name": "FAZENDA MARAVILHA",
+    "slug": "fazenda-maravilha",
+    "description": "",
+    "centerLat": -20.55,
+    "centerLng": -48.55
+  },
+  "points": [
+    {
+      "id": "e1ae633d-a925-4d07-9136-6536c85fa230",
+      "name": "Balança",
+      "category": "balanca",
+      "description": "",
+      "lat": -20.6982375,
+      "lng": -48.5981066,
+      "sortOrder": 0,
+      "isOrigin": true,
+      "routePath": []
+    },
+    {
+      "id": "1a938f1e-2716-48a1-8324-77372a4c4e2d",
+      "name": "Fábrica Ração",
+      "category": "fabrica",
+      "description": "",
+      "lat": -20.6941928,
+      "lng": -48.6041978,
+      "sortOrder": 0,
+      "isOrigin": false,
+      "routePath": [
+        {
+          "lat": -20.6982375,
+          "lng": -48.5981066
+        },
+        {
+          "lat": -20.69820767044768,
+          "lng": -48.598022971752286
+        },
+        {
+          "lat": -20.69583576033912,
+          "lng": -48.6012350754133
+        },
+        {
+          "lat": -20.6946547602938,
+          "lng": -48.602893307411875
+        },
+        {
+          "lat": -20.69432271632628,
+          "lng": -48.60333086534928
+        },
+        {
+          "lat": -20.694255471112783,
+          "lng": -48.60353685896888
+        },
+        {
+          "lat": -20.6941928,
+          "lng": -48.6041978
+        }
+      ]
+    }
+  ]
+}
