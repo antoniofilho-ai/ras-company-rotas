@@ -537,3 +537,101 @@ body{background:var(--bg)}
 
 /* Contraste do simbolo original nas superficies escuras */
 .ras-brand.light .ras-brand-symbol{background:#f5f7ed;border-radius:10px;padding:3px;box-shadow:0 2px 14px rgba(0,0,0,.15)}
+
+/* V4.3 - QR Code abre a lista de locais antes do mapa */
+.ras-list-main{width:100%;max-width:1180px;margin:0 auto;padding:32px 22px 55px;flex:1;display:flex;flex-direction:column;gap:22px}
+.ras-list-hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:26px;align-items:center;overflow:hidden;border:1px solid #315039;border-radius:23px;padding:36px 38px;background:radial-gradient(circle at 82% 20%,rgba(243,167,43,.12),transparent 33%),linear-gradient(125deg,#173a25,#10291b 54%,#112316)}
+.ras-list-hero:after{position:absolute;right:25%;top:-90px;transform:rotate(38deg);width:90px;height:360px;content:"";border-left:26px solid rgba(248,183,46,.045);border-right:24px solid rgba(34,123,68,.12);pointer-events:none}
+.ras-list-hero-text{position:relative;z-index:1;min-width:0}
+.ras-list-overline{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:850;letter-spacing:1.7px;color:#f8c46c}
+.ras-list-signal{width:8px;height:8px;border-radius:50%;background:#f5ad36;box-shadow:0 0 0 4px #efaf3422}
+.ras-list-hero h1{font-size:clamp(32px,4.4vw,53px);font-weight:860;letter-spacing:-1.5px;line-height:1.11;margin:19px 0 13px;color:#f2f9f0}
+.ras-list-hero h1 span{color:#ffbd44}
+.ras-list-hero p{font-size:14px;color:#bfd4c1;line-height:1.75;margin:0;max-width:580px}
+.ras-list-unit-chip{margin-top:22px;display:inline-flex;align-items:center;gap:9px;border-radius:25px;padding:9px 14px;background:#193e29;border:1px solid #356647;color:#e1f0df;font-size:12px;font-weight:750}
+.ras-list-unit-chip svg{color:#f4b247;flex:none}
+.ras-list-hero-metrics{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:222px;padding:18px 12px;border-radius:18px;background:#102619dd;border:1px solid #446344;text-align:center}
+.ras-list-metric-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:#2d4e2a;color:#f7b648}
+.ras-list-hero-metrics>strong{font-size:50px;letter-spacing:-2px;color:#f8c45a;line-height:1.1;margin-top:11px}
+.ras-list-hero-metrics>span{font-size:11px;font-weight:750;color:#d8e6d6}
+.ras-list-hero-metrics>small{margin-top:15px;border-top:1px solid #3a5b42;padding-top:13px;width:100%;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;color:#a6c0a9;font-size:10px;line-height:1.5}
+.ras-list-hero-metrics>small b{color:#edf7e9}
+.ras-list-panel{border:1px solid #35443a;background:linear-gradient(140deg,#171f1a,#121c16);border-radius:22px;padding:28px}
+.ras-list-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+.ras-list-kicker{display:flex;align-items:center;gap:7px;color:#ebad47;font-weight:850;font-size:10px;letter-spacing:1.2px}
+.ras-list-heading h2{font-size:clamp(20px,2.7vw,27px);letter-spacing:-.5px;line-height:1.2;margin:8px 0;color:#f5f8f1}
+.ras-list-heading p{font-size:12px;margin:0;color:#9fb4a4}
+.ras-list-routes-count{display:flex;align-items:center;gap:8px;border:1px solid #365941;background:#1a3122;border-radius:25px;padding:9px 13px;white-space:nowrap;color:#a7d7b1;font-size:11px;font-weight:750}
+.ras-list-search{border:1px solid #455b4b;background:#101b14;color:#efb64b;display:flex;align-items:center;gap:12px;padding:0 15px;border-radius:12px;margin-bottom:19px;min-height:49px}
+.ras-list-search input{flex:1;min-width:0;background:transparent;border:0;color:#f3f8ee;height:47px;font-size:13px;box-shadow:none!important}
+.ras-list-search input::placeholder{color:#889c8d}
+.ras-location-list{display:flex;flex-direction:column;gap:12px}
+.ras-location-card{display:flex;align-items:center;gap:17px;min-height:94px;padding:18px 20px;border-radius:15px;background:#1c2a20;border:1px solid #384f3e;transition:background .14s ease,border-color .14s ease,transform .14s ease;outline-offset:4px}
+.ras-location-card:hover,.ras-location-card:focus-visible{background:#223b2a;border-color:#daa74b;transform:translateY(-1px)}
+.ras-location-icon{--ras-category:#efb74a;flex:none;width:55px;height:55px;display:grid;place-items:center;font-size:27px;border:1px solid color-mix(in srgb,var(--ras-category),transparent 48%);border-radius:14px;background:color-mix(in srgb,var(--ras-category),#1a3021 83%)}
+.ras-location-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.ras-location-copy strong{font-size:17px;letter-spacing:-.2px;color:#f3f8f0;line-height:1.25;overflow-wrap:anywhere}
+.ras-location-category{font-size:11px;color:#efbd66;font-weight:760}
+.ras-location-copy small{color:#a2b6a6;font-size:11px;line-height:1.4}
+.ras-location-action{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:11px}
+.ras-location-route{display:flex;gap:5px;align-items:center;font-size:11px;color:#9fb2a1}
+.ras-location-route.has-route{color:#7dd8a0}
+.ras-location-route.no-route{color:#f1c17a}
+.ras-location-view{display:flex;align-items:center;gap:7px;color:#fac45b;font-size:12px;font-weight:850}
+.ras-location-view svg{width:21px;height:21px}
+.ras-list-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px;min-height:155px;color:#9ab6a4;border:1px dashed #3b5844;border-radius:13px;padding:28px}
+.ras-list-empty svg{color:#e6b452}
+.ras-list-empty strong{color:#edf3e9;font-size:15px}
+.ras-list-empty span{font-size:12px;line-height:1.5}
+.ras-list-instructions{display:flex;align-items:flex-start;gap:14px;border:1px solid #2b4f35;border-radius:15px;background:rgba(24,57,36,.54);padding:17px 20px;color:#acc4af}
+.ras-list-instruction-symbol{flex:none;color:#f6bb58;background:#24442c;border-radius:11px;width:41px;height:41px;display:grid;place-items:center}
+.ras-list-instructions p{line-height:1.7;font-size:12px;margin:0}
+.ras-list-instructions p strong{color:#e9f5e9}
+.ras-return-line{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#afc4b1;font-size:11px}
+.ras-return-line>a{display:flex;align-items:center;gap:8px;color:#f7c36a;border:1px solid #416247;background:#1c3423;border-radius:20px;padding:9px 13px;font-weight:800;font-size:12px}
+.ras-return-line>a:hover{background:#24492f}
+.ras-return-line>span{text-align:right;font-weight:700}
+.ras-navigation-title{padding-bottom:0}
+.ras-change-destination{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #a57e35;border-radius:11px;color:#fac663;padding:11px 15px;background:#342c192e;font-size:12px;font-weight:800;flex:none}
+.ras-change-destination:hover{background:#372e1b}
+@media(max-width:850px){
+  .ras-list-hero{grid-template-columns:minmax(0,1fr) 185px;padding:27px 25px;gap:15px}
+  .ras-list-hero-metrics{min-height:185px}
+  .ras-list-hero-metrics>strong{font-size:40px}
+}
+@media(max-width:640px){
+  .ras-list-main{padding:14px 13px 30px;gap:14px}
+  .ras-list-hero{display:flex;flex-direction:column;align-items:stretch;border-radius:17px;padding:23px 19px;gap:18px}
+  .ras-list-hero h1{font-size:33px;letter-spacing:-1px;margin:13px 0 10px}
+  .ras-list-hero p{font-size:12px;line-height:1.6}
+  .ras-list-unit-chip{margin-top:15px;font-size:11px}
+  .ras-list-hero-metrics{min-height:0;display:grid;grid-template-columns:39px auto 1fr;align-items:center;gap:9px;text-align:left;padding:12px 14px}
+  .ras-list-metric-icon{width:39px;height:39px;grid-row:1 / 3}
+  .ras-list-metric-icon svg{width:21px;height:21px}
+  .ras-list-hero-metrics>strong{font-size:27px;grid-column:2;grid-row:1 / 3;margin:0}
+  .ras-list-hero-metrics>span{font-size:10px;grid-column:3;grid-row:1 / 3}
+  .ras-list-hero-metrics>small{grid-column:1/-1;padding-top:9px;margin-top:3px;justify-content:flex-start}
+  .ras-list-panel{padding:18px 12px;border-radius:16px}
+  .ras-list-heading{align-items:flex-start;flex-direction:column;gap:11px;margin-bottom:16px}
+  .ras-list-heading h2{font-size:19px;margin:6px 0}
+  .ras-list-heading p{font-size:11px}
+  .ras-list-routes-count{font-size:10px;padding:6px 10px}
+  .ras-location-card{padding:14px 11px;gap:11px;min-height:87px;border-radius:12px}
+  .ras-location-icon{width:43px;height:43px;font-size:22px;border-radius:11px}
+  .ras-location-copy strong{font-size:14px}
+  .ras-location-copy small{font-size:10px}
+  .ras-location-category{font-size:10px}
+  .ras-location-action{gap:6px;align-items:flex-end;max-width:118px}
+  .ras-location-route{font-size:9px;line-height:1.2;text-align:right;justify-content:flex-end}
+  .ras-location-route svg{display:none}
+  .ras-location-view{font-size:10px;gap:1px;white-space:nowrap}
+  .ras-location-view svg{width:17px;height:17px}
+  .ras-list-instructions{padding:14px;gap:11px}
+  .ras-list-instructions p{font-size:11px}
+  .ras-return-line{font-size:10px}
+  .ras-navigation-title{align-items:flex-start;gap:9px}
+  .ras-navigation-title h1{font-size:22px}
+  .ras-change-destination{padding:8px 9px;white-space:nowrap;font-size:10px}
+  .ras-change-destination svg{display:none}
+}
+@media(prefers-reduced-motion:reduce){.ras-location-card{transition:none}}

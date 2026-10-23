@@ -25,7 +25,7 @@ export async function request(path, { password, ...options } = {}) {
 // No Render Static Site os dados publicados sao arquivos JSON de SOMENTE LEITURA.
 // No Windows/local continuamos usando normalmente a API administrativa.
 export const getPublicUnit = (slug) => import.meta.env.VITE_PUBLIC_STATIC === 'true'
-  ? request(`/public-data/${encodeURIComponent(slug)}.json`)
+  ? request(`/public-data/${encodeURIComponent(slug)}.json`, { cache: 'no-store' })
   : request(`/api/public/units/${encodeURIComponent(slug)}`);
 export const loginAdmin = (password) => request('/api/admin/login', { method: 'POST', password });
 export const adminRequest = (password, path, options = {}) => request(path, { ...options, password });

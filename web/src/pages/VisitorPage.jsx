@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowRight, Check, CircleAlert, Clock3,
+  ArrowLeft, Check, CircleAlert, Clock3,
   Crosshair, Footprints, Info, LocateFixed,
-  Navigation, Route, Search, ShieldCheck, Truck, X,
+  Navigation, Route, ShieldCheck, Truck, X,
 } from 'lucide-react';
 import { getPublicUnit } from '../api.js';
 import { Brand } from '../components/Brand.jsx';
-import { CATEGORY, FALLBACK_CENTER } from '../constants.js';
+import { FALLBACK_CENTER } from '../constants.js';
 import { PlaceMap } from '../components/PlaceMap.jsx';
 import { distanceLabel, nearestOnRoute, pathMeters } from '../utils/routeGeometry.js';
+import { destinationListPath, destinationPath } from '../utils/destinationNavigation.js';
 
 function errorText(err) {
   if (err?.code === 1) return 'Você não autorizou a localização. Permita o acesso ao GPS nas configurações do navegador para acompanhar o trajeto.';
@@ -19,17 +20,15 @@ function errorText(err) {
 }
 
 export function VisitorPage() {
-  const { slug } = useParams();
+  const { slug, destinoId } = useParams();
+  const navigate = useNavigate();
+  const selectedId = destinoId;
   const [data, setData] = useState(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState('');
-  const [selectedId, setSelectedId] = useState(null);
-  const [search, setSearch] = useState('');
-  const [showAll, setShowAll] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [gpsBusy, setGpsBusy] = useState(false);
   const [gpsError, setGpsError] = useState('');
-  const [gpsRequested, setGpsRequested] = useState(false);
   const [follow, setFollow] = useState(false);
   const [focusCurrent, setFocusCurrent] = useState(false);
   const [mapFitCounter, setMapFitCounter] = useState(0);
@@ -39,20 +38,16 @@ export function VisitorPage() {
 
   useEffect(() => {
     let alive = true;
-    setBusy(true); setError(''); setSelectedId(null); setCurrentLocation(null);
+    setBusy(true); setError(''); setCurrentLocation(null);
     getPublicUnit(slug).then(value => {
       if (!alive) return;
       setData(value);
-      const mainDest = value.points.find(p => !p.isOrigin && p.routePath?.length >= 3)
-        || value.points.find(p => !p.isOrigin) || null;
-      setSelectedId(mainDest?.id || null);
       setBusy(false);
     }).catch(err => { if (alive) { setError(err.message); setBusy(false); } });
     return () => { alive = false; };
   }, [slug]);
 
   const activateGps = useCallback(() => {
-    setGpsRequested(true);
     if (!window.isSecureContext) {
       setGpsError('O navegador exige HTTPS para liberar o GPS no celular. Para testes, utilize o link seguro gerado pelo script 05.');
       return;
@@ -73,7 +68,7 @@ export function VisitorPage() {
   }, []);
 
   useEffect(() => {
-    // QR Code no HTTPS pede GPS automaticamente. O botão permite repetir a solicitação.
+    // GPS e solicitado so depois de o visitante escolher o destino e abrir o mapa.
     if (!data || !window.isSecureContext) return;
     activateGps();
     return () => { if (watchRef.current !== null && navigator.geolocation) { navigator.geolocation.clearWatch(watchRef.current); watchRef.current = null; } };
@@ -82,7 +77,6 @@ export function VisitorPage() {
   const points = data?.points || [];
   const destinations = points.filter(p => !p.isOrigin);
   const selected = destinations.find(p => p.id === selectedId) || null;
-  const origin = points.find(p => p.isOrigin);
   const center = data ? [data.unit.centerLat, data.unit.centerLng] : FALLBACK_CENTER;
   const routePath = selected?.routePath?.length >= 3 ? selected.routePath : [];
   const gpsProgress = useMemo(() => routePath.length && currentLocation
@@ -99,15 +93,12 @@ export function VisitorPage() {
   const arrived = onRoute && gpsProgress.remainingMeters <= 25 && gpsProgress.distanceFromRouteMeters <= 20 && accuracy <= 30;
   const kmPerHour = travelMode === 'vehicle' ? 15 : 4.5;
   const etaMinutes = fullMeters ? Math.max(1, Math.ceil(remainingMeters / (kmPerHour * 1000 / 60))) : null;
-  const available = destinations.filter(p => {
-    const s = `${p.name} ${p.description || ''} ${CATEGORY[p.category]?.label || ''}`.toLocaleLowerCase('pt-BR');
-    return s.includes(search.trim().toLocaleLowerCase('pt-BR'));
-  });
-  const visibleDest = showAll || search ? available : available.slice(0, 4);
   const secure = typeof window !== 'undefined' && window.isSecureContext;
 
   function selectDestination(p) {
-    setSelectedId(p.id); setFollow(false); setFocusCurrent(false); setMapFitCounter(v => v + 1);
+    if (p.id === selectedId) return;
+    navigate(destinationPath(slug, p.id));
+    setFollow(false); setFocusCurrent(false); setMapFitCounter(v => v + 1);
   }
   function wholeRoute() { setFollow(false); setFocusCurrent(false); setMapFitCounter(v => v + 1); }
   function startNavigation() {
@@ -120,7 +111,8 @@ export function VisitorPage() {
   }
 
   if (busy) return <div className="ras-wait"><img src="/ras-company-logo.png" alt="RAS Company"/><span className="spinner"/><p>Preparando o mapa da unidade...</p></div>;
-  if (error) return <div className="ras-wait"><CircleAlert size={38}/><h2>Mapa indisponível</h2><p>{error}</p><Link className="btn btn-primary" to="/"><ArrowLeft size={16}/> Voltar</Link></div>;
+  if (error) return <div className="ras-wait"><CircleAlert size={38}/><h2>Mapa indisponível</h2><p>{error}</p><Link className="btn btn-primary" to="/"><ArrowLeft size={16}/> Voltar ao início</Link></div>;
+  if (!selected) return <div className="ras-wait"><CircleAlert size={38}/><h2>{'Destino n\u00e3o encontrado'}</h2><p>{'Este local n\u00e3o est\u00e1 dispon\u00edvel para visitantes. Consulte a lista atualizada.'}</p><Link className="btn btn-primary" to={destinationListPath(slug)}><ArrowLeft size={16}/>{'Ver locais dispon\u00edveis'}</Link></div>;
 
   return (
     <div className="ras-visitor-v4">
@@ -131,7 +123,11 @@ export function VisitorPage() {
         </div>
       </header>
       <main className="ras-visitor-main">
-        <div className="ras-welcome-bar"><div><span className="ras-section-eyebrow">BEM-VINDO À RAS COMPANY</span><h1>{data.unit.name}</h1><p>{data.unit.description || 'Encontre seu destino e siga os caminhos internos autorizados.'}</p></div><div className="ras-visitor-number"><Route size={18}/><strong>{destinations.length}</strong><span>destinos</span></div></div>
+        <div className="ras-return-line"><Link to={destinationListPath(slug)}><ArrowLeft size={17}/>{'Todos os destinos'}</Link><span>{data.unit.name}</span></div>
+        <div className="ras-welcome-bar ras-navigation-title">
+          <div><span className="ras-section-eyebrow">{'MAPA DO DESTINO'}</span><h1>{selected.name}</h1><p>{'Acompanhe o caminho cadastrado e use o GPS do celular para se orientar.'}</p></div>
+          <Link className="ras-change-destination" to={destinationListPath(slug)}><ArrowLeft size={16}/>{'Trocar local'}</Link>
+        </div>
         {showInfo && <div className="ras-message is-neutral"><Info size={19}/><span>Este mapa utiliza estradas desenhadas pela unidade. O GPS fica apenas no seu navegador. Siga a sinalização, não atravesse áreas restritas e respeite as barreiras sanitárias.</span><button onClick={() => setShowInfo(false)} aria-label="Fechar"><X size={17}/></button></div>}
         <div className={`ras-gps-card ${currentLocation && gpsReliable ? 'is-on' : !secure ? 'is-http' : gpsError ? 'is-error' : 'is-waiting'}`}>
           <span className="ras-gps-symbol"><LocateFixed size={24}/></span>
@@ -144,16 +140,6 @@ export function VisitorPage() {
         {!!gpsError && secure && <div className="ras-message"><CircleAlert size={18}/><span>{gpsError}</span><button onClick={() => setGpsError('')} aria-label="Fechar"><X size={16}/></button></div>}
         {routePath.length > 0 && currentLocation && !gpsReliable && <div className="ras-message"><CircleAlert size={17}/><span>A precisão do GPS está baixa. O trajeto inteiro permanece visível até o sinal melhorar.</span></div>}
         {routePath.length > 0 && currentLocation && gpsReliable && !onRoute && <div className="ras-message"><CircleAlert size={18}/><span>Você está a cerca de {distanceLabel(gpsProgress.distanceFromRouteMeters)} do trajeto cadastrado. Não foi calculado nenhum atalho; procure a estrada indicada ou peça orientação.</span></div>}
-        <section className="ras-destination-card" aria-labelledby="dest-heading">
-          <div className="ras-card-title"><div><span className="ras-gold-circle"><Crosshair size={21}/></span><h2 id="dest-heading">Selecione seu destino</h2></div>{destinations.length > 4 && <button type="button" onClick={() => setShowAll(v => !v)}>{showAll ? 'Mostrar menos' : 'Ver todos'} <ArrowRight size={14}/></button>}</div>
-          <div className="ras-destination-grid">
-            {visibleDest.map(p => <button type="button" key={p.id} onClick={() => selectDestination(p)} className={`ras-destination-option ${selected?.id === p.id ? 'is-selected' : ''}`} aria-pressed={selected?.id === p.id}>
-              <span className="ras-destination-emoji">{CATEGORY[p.category]?.icon || '📍'}</span><span>{p.name}</span>
-            </button>)}
-            {visibleDest.length === 0 && <span className="ras-no-dest">Nenhum destino disponível.</span>}
-          </div>
-          {(showAll || destinations.length > 4) && <label className="ras-dest-search"><Search size={16}/><input placeholder="Buscar fábrica, escritório, barreira..." value={search} onChange={e => setSearch(e.target.value)} /></label>}
-        </section>
         <section className="ras-visitor-mapbox" aria-label="Mapa interativo de localização">
           <div className="ras-map-inner">
             <PlaceMap

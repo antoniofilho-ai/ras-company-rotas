@@ -330,7 +330,7 @@ export function AdminPage() {
           </div>}
 
           {tab === 'qrcode' && unit && <div className="qr-layout">
-            <section className="qr-settings card-panel"><div className="eyebrow green">ACESSO PARA VISITANTES</div><h2>QR Code da unidade</h2><p>Imprima e fixe na balança. O QR Code mantém o mesmo link mesmo quando os pontos forem alterados.</p>
+            <section className="qr-settings card-panel"><div className="eyebrow green">ACESSO PARA VISITANTES</div><h2>QR Code da unidade</h2><p>Imprima e fixe na balança. O visitante abre a lista de destinos e escolhe o local para visualizar o mapa. O QR Code mantém o mesmo link.</p>
               <InputField label="Endereço base do site" hint="Para testar GPS no celular, cole aqui o domínio HTTPS temporário gerado pelo script 05. HTTP por IP não libera localização."><input value={qrBase} onChange={e => setQrBase(e.target.value)} placeholder="https://meu-link-temporario.trycloudflare.com"/></InputField>
               <InputField label="Link completo"><div className="link-copy"><input aria-label="Link público" readOnly value={currentLink}/><button title="Copiar link" type="button" disabled={!currentLink} onClick={copyLink}><Copy size={17}/></button></div></InputField>
               {((/localhost|127\.0\.0\.1/i).test(qrBase) || qrBase.trim().startsWith('http:')) && <div className="banner-warn">Atenção: localhost só abre no próprio computador. Para GPS no celular use o link HTTPS do script 05, sem localhost nem IP HTTP.</div>}
